@@ -1,0 +1,7 @@
+---
+# Drift-free run: perfect odometry, the reference the other two are scored
+# against. No drift, no loop-closure events, no correction warps.
+per_loop_m: 0.0
+yaw_per_loop_deg: 0.0
+seed: 7
+control_spacing_s: 5.0

@@ -1,0 +1,17 @@
+---
+# Loop-closure run: the platform drifts between corrections and each completed
+# patrol loop fires a loop closure that delivers the correction warp.
+#
+# 0.6 m per 659 m loop is 0.09% of distance travelled, below the 0.1% a
+# LiDAR-inertial system reports and well below the 0.5% of a visual-inertial
+# one.
+#
+# The yaw is set the same way, as a fraction of distance travelled: LiDAR
+# odometry reports 0.0013 deg/m of relative rotation error on the KITTI
+# odometry benchmark (LOAM, V-LOAM; visual-inertial VINS-Fusion reports
+# 0.0033 deg/m), and this run drifts at 90% of that LiDAR rate, 0.00117 deg/m,
+# which is 0.771 deg over a 659 m loop.
+per_loop_m: 0.6
+yaw_per_loop_deg: 0.771
+seed: 7
+control_spacing_s: 5.0

@@ -1,0 +1,9 @@
+# Dummy sensor: FileDataLoader needs a camera_info to build a Sensor object for
+# HydraPipeline.from_config. No frames are ever iterated in the ATC driver, so
+# these intrinsics are placeholders and do not affect the flow layer.
+width: 640
+height: 480
+fx: 500.0
+fy: 500.0
+cx: 320.0
+cy: 240.0

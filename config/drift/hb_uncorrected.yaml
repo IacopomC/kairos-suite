@@ -1,0 +1,11 @@
+---
+# HB uncorrected run: no correction while the platform operates, re-anchored
+# only at the next day's start-up (--drift-reset day). 0.0079 m per 158 m loop
+# is 0.005% of distance travelled, the same fraction the ATC run uses.
+#
+# Yaw scaled down by the same factor of twenty, 0.000065 deg/m, which over the
+# 158 m loop is 0.0103 deg.
+per_loop_m: 0.0079
+yaw_per_loop_deg: 0.0103
+seed: 7
+control_spacing_s: 5.0

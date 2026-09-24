@@ -1,0 +1,17 @@
+---
+# Uncorrected run: no correction while the platform operates; the error
+# compounds across the day and the estimate re-anchors only at the next
+# morning's start-up (--drift-reset day).
+#
+# 0.03 m per 659 m loop is 0.005% of distance travelled, twenty times below the
+# loop-closure run and below any published system, so that the day ends at
+# about 3 m rather than at a map-wide displacement no scoring survives.
+#
+# The yaw is scaled down by the same factor of twenty, to 0.000065 deg/m
+# against the 0.0013 deg/m LiDAR odometry reports on the KITTI odometry
+# benchmark. That is 0.0428 deg per 659 m loop and 4.2 deg over a twelve-hour
+# day, displacing the far side of the floor by 4.0 m.
+per_loop_m: 0.03
+yaw_per_loop_deg: 0.0428
+seed: 7
+control_spacing_s: 5.0

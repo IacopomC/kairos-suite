@@ -1,0 +1,12 @@
+---
+# HB loop-closure run. Per-loop numbers do not transfer from ATC: the HB loop
+# is 158 m, so 0.6 m per loop is 0.38% of distance travelled and each day fires
+# about 718 corrections.
+#
+# The yaw rate does transfer, being per-distance: 0.00117 deg/m, 90% of the
+# 0.0013 deg/m LiDAR odometry reports on the KITTI odometry benchmark, which
+# over HB's 158 m loop is 0.185 deg.
+per_loop_m: 0.6
+yaw_per_loop_deg: 0.185
+seed: 7
+control_spacing_s: 5.0
