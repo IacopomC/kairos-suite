@@ -33,7 +33,7 @@ from mpl_toolkits.mplot3d.art3d import Line3DCollection
 from scipy.spatial import cKDTree
 import spark_dsg as dsg
 
-import hydra_python
+from scene_loader import get_dataloader
 from kairos_python import flow_archetype
 from kairos_python._kairos_bindings import classify_archetype
 from kairos_python.pipeline import (
@@ -98,7 +98,7 @@ def main():
     t_query = float(t.min() + args.time_frac * (t.max() - t.min()))
     print(f"[flow_viz] query {pd.to_datetime(t_query, unit='s')} UTC")
 
-    data = hydra_python.get_dataloader(args.scene_dir)
+    data = get_dataloader(args.scene_dir)
     pipeline = load_pipeline(data, args.config_name, args.labelspace, enable_lcd=False)
     arch_params = archetype_params_from_config(
         load_configs(args.config_name, labelspace=args.labelspace, enable_lcd=False))

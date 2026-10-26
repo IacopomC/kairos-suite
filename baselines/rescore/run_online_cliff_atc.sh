@@ -55,7 +55,7 @@ PY
   docker run --rm --name online_cliff_atc_extract \
     -v "$SUITE":/ws/src/kairos-suite \
     -v "$DATA":/data:ro -v "$EXTRACT_DIR":/out \
-    "$IMAGE" bash -c "set +u; source /opt/ros/noetic/setup.bash; source /ws/devel/setup.bash; export PYTHONPATH=/ws/src/kairos/python/src:\$PYTHONPATH; set -u; \
+    "$IMAGE" bash -c "source /ws/src/kairos-suite/docker/ws_env.sh; set -u; \
       python3 -u /ws/src/kairos-suite/baselines/rescore/extract_fov_stream_online_cliff.py \
         --graph $GRAPH --days$TRAIN_NPZ --out-dir /out --minutes $MINUTES; \
       chown -R $(id -u):$(id -g) /out"

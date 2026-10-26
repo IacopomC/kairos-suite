@@ -16,17 +16,21 @@ ARG KAIROS_IMAGE=kairos:latest
 FROM ${KAIROS_IMAGE}
 
 ENV DEBIAN_FRONTEND=noninteractive
+# Ubuntu 24.04 bases (ROS 2 Jazzy) refuse system-wide pip installs without this;
+# older pip ignores it.
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 # The suite plots and tabulates; the pipeline image carries neither. numpy is
 # already pinned in the base image and is deliberately not upgraded here, so
 # every dependency of matplotlib and pandas is listed explicitly (--no-deps).
 RUN pip3 install --no-cache-dir --no-deps \
         "matplotlib==3.7.5" \
-        "pandas==2.0.3" \
+        "pandas==2.0.3; python_version < '3.12'" \
+        "pandas==2.1.4; python_version >= '3.12'" \
         "pyyaml" \
         "msgpack" \
         "python-dateutil" "pytz" "tzdata" "cycler" "kiwisolver" "fonttools" "packaging" "pillow" \
-        "pyparsing" "contourpy==1.1.1" "importlib-resources" "zipp"
+        "pyparsing" "contourpy==1.1.1; python_version < '3.12'" "importlib-resources" "zipp"
 
 # This checkout replaces the copy of the suite the Kairos image fetched, at the
 # path the suite's scripts expect.

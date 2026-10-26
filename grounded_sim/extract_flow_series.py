@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 from scipy.spatial import cKDTree
 
-import hydra_python
+from scene_loader import get_dataloader
 from kairos_python import flow_archetype
 from kairos_python.pipeline import (
     load_pipeline, load_configs, archetype_params_from_config)
@@ -70,7 +70,7 @@ def main():
     t0, t1 = float(t.min()), float(t.max())
     flow_times = np.linspace(t0, t1, args.n_flow_steps)
 
-    data = hydra_python.get_dataloader(args.scene_dir)
+    data = get_dataloader(args.scene_dir)
     pipeline = load_pipeline(data, args.config_name, args.labelspace, enable_lcd=False)
     arch_params = archetype_params_from_config(
         load_configs(args.config_name, labelspace=args.labelspace, enable_lcd=False))

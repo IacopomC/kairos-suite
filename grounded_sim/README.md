@@ -96,8 +96,9 @@ DATA_ROOT=/path/to/datasets STREAM_SOURCE=atc GRAPH=/data/atc/graph/atc_graph.js
   `--stream-source hb`), save `flow_state.bin`.
 - `run_viz.py`: dataset-agnostic Rerun recording driver (`--stream-source
   {atc,hb}`, `--mode {online,predict}`); emits the portable `.npz`.
-- `create_rrd.sh`: runs `run_viz.py`, then renders to `.rrd` in the
-  `kairos-viz` image; configured by environment (see the script header).
+- `create_rrd.sh`: runs `run_viz.py`, then renders to `.rrd`, in the pipeline
+  image on ROS 2 or the `kairos-viz` image on ROS 1; configured by environment
+  (see the script header).
 - `explore_patrol.py`: the region patrol of the sparse-coverage study.
 - `draw_patrol.py`, `viz_graph.py`, `flow_viz.py`, `extract_flow_series.py`: figures.
 - `robot_sim.py`, `atc_stream.py`, `hb_stream.py`, `tbd_stream.py`: stream and

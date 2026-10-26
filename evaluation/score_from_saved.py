@@ -51,6 +51,8 @@ import pathlib
 import sys
 
 import hydra_python
+
+from scene_loader import get_dataloader
 from kairos_python.pipeline import load_pipeline  # flow pipeline moved to kairos
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -194,7 +196,7 @@ def main() -> None:
     # Build the pipeline. load_pipeline is the same construction path the
     # training CLI uses; the only thing we skip is the data iteration loop.
     print("\n[1/4] Constructing pipeline...")
-    data = hydra_python.get_dataloader(scene_path)
+    data = get_dataloader(scene_path)
     pipeline = load_pipeline(
         data,
         args.config_name,

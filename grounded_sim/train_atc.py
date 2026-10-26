@@ -39,7 +39,7 @@ import sys
 import time
 import numpy as np
 
-import hydra_python
+from scene_loader import get_dataloader
 from kairos_python.pipeline import load_pipeline
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
@@ -469,7 +469,7 @@ def main():
 
     out_dir = pathlib.Path(args.out_dir); out_dir.mkdir(parents=True, exist_ok=True)
 
-    data = hydra_python.get_dataloader(args.scene_dir)
+    data = get_dataloader(args.scene_dir)
     pipeline = load_pipeline(data, args.config_name, args.labelspace,
                              output_path=out_dir, enable_lcd=False)
     if pipeline is None:

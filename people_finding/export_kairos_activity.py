@@ -45,9 +45,9 @@ def main():
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
-    import hydra_python
+    from scene_loader import get_dataloader
     from kairos_python.pipeline import load_pipeline
-    data = hydra_python.get_dataloader(args.scene_dir)
+    data = get_dataloader(args.scene_dir)
     pipeline = load_pipeline(data, args.config_name, args.labelspace,
                              output_path=None, enable_lcd=False)
     ok, err = pipeline.load_flow_state(args.flow_state)

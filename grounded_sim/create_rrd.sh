@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # Build a scrubbable Rerun recording (.rrd) of a Kairos grounded simulation, for
-# any dataset. Two decoupled stages (different Python versions -> two images):
-#   Stage 1 (kairos image, Python 3.8):  run_viz.py     -> flow.npz
-#   Stage 2 (kairos-viz image, Python 3.11): render     -> out.rrd
+# any dataset. Two decoupled stages:
+#   Stage 1 (pipeline image):  run_viz.py  -> flow.npz
+#   Stage 2 (VIZ_IMAGE):       render      -> out.rrd
+# A ROS 2 pipeline image carries the renderer (kairos-visualize), so VIZ_IMAGE
+# defaults to it. The ROS 1 pipeline image is Python 3.8, too old for Rerun, so
+# there VIZ_IMAGE defaults to the small kairos-viz image, built from
+# kairos/kairos_visualizer.
 # The only dataset-specific inputs are the graph, the stream source, and the days.
 #
 #   # ATC, model-building drive over one day:
@@ -22,7 +26,13 @@ SUITE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DATA_ROOT="${DATA_ROOT:-$HOME/datasets}"
 IMAGE="${IMAGE:-kairos-suite}"
 KAIROS_DIR="${KAIROS_DIR:-$SUITE/../kairos}"    # kairos checkout (holds kairos_visualizer)
-VIZ_IMAGE="${VIZ_IMAGE:-kairos-viz}"
+if [ -z "${VIZ_IMAGE:-}" ]; then
+  if docker run --rm --entrypoint sh "$IMAGE" -c 'command -v kairos-visualize' >/dev/null 2>&1; then
+    VIZ_IMAGE="$IMAGE"
+  else
+    VIZ_IMAGE=kairos-viz
+  fi
+fi
 GRAPH="${GRAPH:?set GRAPH to the authored graph .json (in-container /data path)}"
 OCCUPANCY="${OCCUPANCY:-}"                    # authored occupancy-layer .npz (walls)
 PREBUILT="${PREBUILT:-}"                       # online: static map + warm-started model
@@ -53,8 +63,10 @@ fi
 
 # Always rebuild (Docker layer cache makes this a no-op when the visualizer
 # source is unchanged) so edits to the renderer are never silently skipped.
-echo "[create_rrd] building $VIZ_IMAGE from kairos/kairos_visualizer (cached if unchanged)"
-docker build -t "$VIZ_IMAGE" "$KAIROS_DIR/kairos_visualizer"
+if [ "$VIZ_IMAGE" = kairos-viz ]; then
+  echo "[create_rrd] building $VIZ_IMAGE from kairos/kairos_visualizer (cached if unchanged)"
+  docker build -t "$VIZ_IMAGE" "$KAIROS_DIR/kairos_visualizer"
+fi
 
 echo "[create_rrd] stage 1 ($STREAM_SOURCE / $MODE) -> flow.npz"
 docker run --rm -v "$SUITE":/ws/src/kairos-suite $STATE_MOUNT \
@@ -67,8 +79,7 @@ docker run --rm -v "$SUITE":/ws/src/kairos-suite $STATE_MOUNT \
   -e SNAP="$SNAP" -e FINE_SNAP="$FINE_SNAP" -e FINE_UNTIL_H="$FINE_UNTIL_H" \
   -e QUERY_EVERY="$QUERY_EVERY" -e DET_DECIMATE="$DET_DECIMATE" -e MINUTES="$MINUTES" \
   "$IMAGE" bash -c '
-    set -e; set +u; source /opt/ros/noetic/setup.bash; source /ws/devel/setup.bash; set -u
-    export PYTHONPATH=/ws/src/kairos/python/src:$PYTHONPATH
+    set -e; source /ws/src/kairos-suite/docker/ws_env.sh
     cd /ws/src/kairos-suite/grounded_sim
     DD="$DAYS"
     if [ -z "$DD" ] && [ "$STREAM_SOURCE" = hb ]; then
@@ -87,5 +98,6 @@ docker run --rm -v "$SUITE":/ws/src/kairos-suite $STATE_MOUNT \
     chown -R $HOST_UGID /out 2>/dev/null || true'
 
 echo "[create_rrd] stage 2: render out.rrd"
-docker run --rm --user "$UID_GID" -v "$OUT":/out "$VIZ_IMAGE" /out/flow.npz -o /out/out.rrd $RENDER_ARGS
+docker run --rm --user "$UID_GID" -v "$OUT":/out --entrypoint kairos-visualize "$VIZ_IMAGE" \
+  /out/flow.npz -o /out/out.rrd $RENDER_ARGS
 echo "[create_rrd] wrote $OUT/out.rrd  (open with: rerun $OUT/out.rrd)"

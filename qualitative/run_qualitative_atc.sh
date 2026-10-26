@@ -56,8 +56,7 @@ for pitch in $PITCHES; do
   mkdir -p "$sub"
   read -r -d '' CHAIN <<EOF || true
 set -e
-set +u; source /opt/ros/noetic/setup.bash; source /ws/devel/setup.bash; set -u
-export PYTHONPATH=/ws/src/kairos/python/src:\$PYTHONPATH
+source /ws/src/kairos-suite/docker/ws_env.sh
 cd /ws/src/kairos-suite/qualitative
 python3 -u export_flow_mod.py --flow-state /state/$(basename "$STATE_ABS") \\
   --graph $GRAPH --scene-dir /ws/src/kairos-suite/grounded_sim/stub_scene \\

@@ -39,7 +39,7 @@ import sys
 
 import numpy as np
 
-import hydra_python
+from scene_loader import get_dataloader
 from kairos_python.pipeline import load_pipeline
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "grounded_sim"))
@@ -125,7 +125,7 @@ def main():
         print("[export] region {}: {} mapped cells".format(name, len(sel)), flush=True)
     order = np.concatenate([keep[n] for n, _ in regions])
 
-    data = hydra_python.get_dataloader(a.scene_dir)
+    data = get_dataloader(a.scene_dir)
     pipeline = load_pipeline(data, a.config_name, a.labelspace, enable_lcd=False)
     if pipeline is None:
         raise SystemExit("[export] load_pipeline failed")

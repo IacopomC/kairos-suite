@@ -42,7 +42,7 @@ import numpy as np
 import pandas as pd
 from scipy.spatial import cKDTree
 
-import hydra_python
+from scene_loader import get_dataloader
 from kairos_python import flow_archetype
 from kairos_python._kairos_bindings import classify_archetype
 from kairos_python.pipeline import (
@@ -383,7 +383,7 @@ def main():
     if args.mode == "predict" and not args.flow_state:
         raise SystemExit("[run_viz] --mode predict requires --flow-state")
 
-    data = hydra_python.get_dataloader(args.scene_dir)
+    data = get_dataloader(args.scene_dir)
     pipeline = load_pipeline(data, args.config_name, args.labelspace, enable_lcd=False,
                              config_overrides={"flow_temporal":
                                                {"place_summary_max_nodes": 0,

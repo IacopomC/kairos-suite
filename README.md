@@ -16,8 +16,9 @@ The Kairos model itself is built in the [`kairos`](https://github.com/IacopomC/k
 
 ## Installation
 
-The suite runs on top of Kairos, in Docker or natively (Ubuntu 20.04, ROS
-Noetic and a native Kairos build).
+The suite runs on top of Kairos, in Docker or natively (Ubuntu 24.04, ROS 2
+Jazzy and a native Kairos build). It also runs on the ROS 1 (Noetic) version of
+Kairos, the `archive/ros_noetic` branch of the Kairos repositories.
 
 ### 1. Set up the workspace
 
@@ -26,7 +27,7 @@ The Kairos workspace already holds this repository as `kairos-suite`:
 ```bash
 mkdir -p ~/kairos_ws/src && cd ~/kairos_ws/src
 git clone https://github.com/IacopomC/kairos.git
-vcs import . < kairos/install/kairos.rosinstall   # needs python3-vcstool
+vcs import . < kairos/kairos.repos   # needs python3-vcstool
 ```
 
 ### 2a. Docker
@@ -48,13 +49,14 @@ results folders mounted, and `docker/run.sh bash` opens a shell there.
 
 ### 2b. Native
 
-Build Kairos natively first (section *2b. Native* of the
-[`kairos` README](https://github.com/IacopomC/kairos#2b-native-ubuntu-2004--ros-noetic)),
+Build Kairos natively first (section *Native* of the
+[`kairos` README](https://github.com/IacopomC/kairos#native-ubuntu-2404--ros-2-jazzy)),
 then add the suite's Python dependencies and put its packages on the Python
 path:
 
 ```bash
-pip install "matplotlib==3.7.5" "pandas==2.0.3" pyyaml msgpack
+pip install "matplotlib==3.7.5" "pandas==2.0.3; python_version < '3.12'" \
+    "pandas==2.1.4; python_version >= '3.12'" pyyaml msgpack
 export PYTHONPATH=~/kairos_ws/src/kairos-suite:~/kairos_ws/src/kairos-suite/evaluation:~/kairos_ws/src/kairos-suite/grounded_sim:$PYTHONPATH
 ```
 
@@ -132,8 +134,10 @@ set `KAIROS_SUITE_DIR` to the `evaluation/` directory.
 ## Visualization
 
 A run can emit a portable `.npz` recording that renders to a scrubbable Rerun
-`.rrd`, rendered in the small `kairos-viz` image. `grounded_sim/create_rrd.sh` builds it from the
-`kairos` checkout next to this one (`KAIROS_DIR=` to point elsewhere), runs the
+`.rrd`. A ROS 2 pipeline image renders it itself. The ROS 1 image's Python is too
+old for Rerun, so there it renders in the small `kairos-viz` image, which
+`grounded_sim/create_rrd.sh` builds from the `kairos` checkout next to this one
+(`KAIROS_DIR=` to point elsewhere). The script picks the image, runs the
 simulation, and renders:
 
 ```bash
