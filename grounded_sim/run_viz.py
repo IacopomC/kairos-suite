@@ -326,7 +326,7 @@ def run_predict(args, pipeline, arch_params, arch_horizon_s, pos, nav_r, nav_edg
         det_x=np.concatenate(dx_all), det_y=np.concatenate(dy_all),
         det_th=np.concatenate(dth_all), det_in=np.zeros(len(det_step), bool),
         det_vox=np.concatenate(dvox_all),
-        # no robot on a fixed-camera test set; omit it so the renderer skips the
+        # no robot in predict mode; omit it so the renderer skips the
         # layer entirely (parking it off-map would blow up the view bounds).
         arch_colors=np.array(flow_archetype.color_list()),
         active_window_radius=0.0)

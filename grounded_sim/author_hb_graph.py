@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 r"""Author the HB-station TSDF-voxel graph from training coverage.
 
-The station has no floor-plan wall grid, so the graph is the instrumented
-region alone: one PLACES node per 0.4 m cell that holds at least one training
+The graph is the instrumented region alone, without wall geometry: one PLACES node per 0.4 m cell that holds at least one training
 detection of the interpolated stream (the same stream the flow model trains
 on), 8-adjacent edges, every node traversable. The graph exists to give the
 trainer and the evaluator their mapped-cell universe (set_visible_voxels /
-presence scan); no robot ever routes on it (the read is full-visibility only).
+presence scan) in full-visibility runs. The patrol routes on the graph from
+`author_graph.py` instead.
 
 Coverage uses the TRAINING dates only, and only dates covered by every
 camera of the station. A sidecar npz records the cell set and parameters.

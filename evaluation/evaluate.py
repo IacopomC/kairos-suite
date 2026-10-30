@@ -825,7 +825,7 @@ def main():
                     help="presence-replay stream: 'hb' reads station dates "
                          "(YYYY-MM-DD in --days/--fremen-train-days) via "
                          "HBDayStream (per-track 10 Hz interpolation) and fits "
-                         "FreMEn full-visibility (no robot exists at the site)")
+                         "FreMEn full-visibility")
     ap.add_argument("--hb-root", default="/data/hb-station/Data-2")
     ap.add_argument("--station", default="HB", choices=["HB", "PB"])
     ap.add_argument("--interp-hz", type=float, default=10.0)
